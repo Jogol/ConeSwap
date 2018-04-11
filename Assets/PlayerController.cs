@@ -8,18 +8,14 @@ public class PlayerController : MonoBehaviour
 
 
     //Public variables
-    public GameObject leftButtonLeft;
-    public GameObject leftButtonRight;
-
-    public GameObject rightButtonLeft;
-    public GameObject rightButtonRight;
-
+    public ControllerCollider leftControllerCollider;
+    public ControllerCollider rightControllerCollider;
     //Private variables
-    private GameObject leftController;
-    private GameObject rightController;
 
     private int leftDeviceIndex;
     private int rightDeviceIndex;
+
+    private int heldFrames = 0;
 
 
 
@@ -32,12 +28,34 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
-        if (leftDeviceIndex != -1 && SteamVR_Controller.Input(leftDeviceIndex).GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        //If holding both right and left trigger
+        if (leftDeviceIndex != -1 && SteamVR_Controller.Input(leftDeviceIndex).GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && SteamVR_Controller.Input(rightDeviceIndex).GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            heldFrames++;
+            if (heldFrames > 200)
+            {
+                GameObject leftCC = leftControllerCollider.GetColliding();
+                GameObject rightCC = rightControllerCollider.GetColliding();
 
-            SteamVR_Controller.Input(leftDeviceIndex).TriggerHapticPulse(500);
+                if (leftCC != null && rightCC != null)
+                {
+                    Vector3 leftPos = leftCC.transform.position;
+                    Vector3 rightPos = rightCC.transform.position;
+
+                    leftCC.transform.position = rightPos;
+                    rightCC.transform.position = leftPos;
+
+                    SteamVR_Controller.Input(leftDeviceIndex).TriggerHapticPulse(500);
+                }
+                
+                heldFrames = 0;
+            }
             
+            
+            
+        } else
+        {
+            heldFrames = 0;
         }
 
         if (rightDeviceIndex != -1 && SteamVR_Controller.Input(rightDeviceIndex).GetPressDown(SteamVR_Controller.ButtonMask.Trigger))

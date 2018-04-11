@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Cone1
+  - Cone2
+  - Cone3
+  - Cone4
+  - Cone5
   layers:
   - Default
   - TransparentFX
