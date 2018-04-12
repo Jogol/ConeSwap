@@ -9,6 +9,9 @@ TagManager:
   - Cone3
   - Cone4
   - Cone5
+  - FxTemporaire
+  - projectile
+  - Car
   layers:
   - Default
   - TransparentFX
