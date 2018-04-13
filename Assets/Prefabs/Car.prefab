@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4238732387405390}
   - component: {fileID: 33584182446842852}
   - component: {fileID: 23987487962747366}
-  - component: {fileID: 65096519759366418}
   - component: {fileID: 54086915957833956}
   - component: {fileID: 114674398876335332}
+  - component: {fileID: 136520447181453418}
   m_Layer: 0
   m_Name: Car
   m_TagString: Car
@@ -119,7 +119,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1541982646403668}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.5453243, y: 1.5248, z: -0.007056296}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4966622072801012}
@@ -380,7 +380,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1541982646403668}
   serializedVersion: 2
-  m_Mass: 1.23
+  m_Mass: 2.96
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -388,18 +388,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65096519759366418
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1541982646403668}
-  m_Material: {fileID: 13400000, guid: de3fb19626dffb046afc748e4908a4d2, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0118514, y: 1.2854035, z: 1.8883743}
-  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &114674398876335332
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -411,4 +399,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ecc264b7f5069488eb07b4ab981e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 0.5
+  thrust: 0.62
+--- !u!136 &136520447181453418
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1541982646403668}
+  m_Material: {fileID: 13400000, guid: de3fb19626dffb046afc748e4908a4d2, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.66
+  m_Height: 2.34
+  m_Direction: 2
+  m_Center: {x: 0.00000005960466, y: 0.44, z: -0.013626876}
