@@ -8,8 +8,8 @@ public class CarSpawner : MonoBehaviour {
     public GameObject spawnPoint1;
     public GameObject spawnPoint2;
 
-    int minWaitTime = 4;
-    int maxWaitTime = 7;
+    public int minWaitTime = 4;
+    public int maxWaitTime = 7;
     // Use this for initialization
     void Start () {
         StartCoroutine("Spawner");
