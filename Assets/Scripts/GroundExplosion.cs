@@ -19,7 +19,6 @@ public class GroundExplosion : MonoBehaviour {
     {
         if (other.tag == "Car")
         {
-            Debug.Log("Boom!");
             Instantiate(explosion, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
         }

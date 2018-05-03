@@ -5,8 +5,7 @@ using UnityEngine;
 public class CarSpawner : MonoBehaviour {
 
     public GameObject car;
-    public GameObject spawnPoint1;
-    public GameObject spawnPoint2;
+    public GameObject[] spawnPoints;
 
     public int minWaitTime = 4;
     public int maxWaitTime = 7;
@@ -26,14 +25,8 @@ public class CarSpawner : MonoBehaviour {
         {
             int randomNumber = Random.Range(minWaitTime, maxWaitTime);
             //bool boolean = (Random.value > 0.5f);
-
-            if (Random.value > 0.5f)
-            {
-                Instantiate(car, spawnPoint1.transform.position, spawnPoint1.transform.rotation);
-            } else
-            {
-                Instantiate(car, spawnPoint2.transform.position, spawnPoint2.transform.rotation);
-            }
+            int rand = Random.Range(0, spawnPoints.Length);
+            Instantiate(car, spawnPoints[rand].transform.position, spawnPoints[rand].transform.rotation);
             yield return new WaitForSeconds(randomNumber);
         }
     }
