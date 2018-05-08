@@ -43,11 +43,6 @@ public class Tracking : MonoBehaviour
     public float markerLength = 0.1f;
 
     /// <summary>
-    /// The AR game object.
-    /// </summary>
-    public GameObject arGameObject;
-
-    /// <summary>
     /// The list of AR game objects.
     /// </summary>
     public GameObject[] arGameObjectList;
@@ -115,6 +110,11 @@ public class Tracking : MonoBehaviour
     /// The matrix that inverts the Z axis.
     /// </summary>
     Matrix4x4 invertZM;
+
+    /// <summary>
+    /// Matrix that rotates something 90 degrees in i-axis TODO NOT I AXIS
+    /// </summary>
+    Matrix4x4 rotate90i;
 
     /// <summary>
     /// The transformation matrix.
@@ -220,6 +220,26 @@ public class Tracking : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //In essence, there is one group per physical object (eg cardboard box)
+        //If the provided number doesn't make sense, just make it all one big group
+        setupGroups();
+        lastKeptID = new int[numberOfGroups];
+        lastKeptIDCurrentArea = new int[numberOfGroups];
+        webCamTextureToMatHelper = gameObject.GetComponent<WebCamTextureToMatHelper>();
+        //webCamTexture = new WebCamTexture();
+        //renderer = GetComponent<Renderer>();
+        //texture = new Texture2D(640, 480, TextureFormat.RGBA32, false);
+        ////renderer.material.mainTexture = webCamTexture;
+        //webCamTexture.Play();
+        ////Debug.Log("Webcam:" + webCamTexture.height + " " + webCamTexture.width);
+        //rgbaMat = new Mat(webCamTexture.height, webCamTexture.width, CvType.CV_8UC4);
+        //texture = new Texture2D (webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
+        //renderer.material.mainTexture = texture;
+        webCamTextureToMatHelper.Initialize();
+    }
+
+    private void setupGroups()
+    {
         if (Modulo(arGameObjectList.Length, objPerGroup) != 0)
             objPerGroup = arGameObjectList.Length;
 
@@ -240,19 +260,6 @@ public class Tracking : MonoBehaviour
             arGameObjectGroupedList[i] = objectSubGroup;
             groupedGroupList[i] = idSubGroup;
         }
-        lastKeptID = new int[numberOfGroups];
-        lastKeptIDCurrentArea = new int[numberOfGroups];
-        webCamTextureToMatHelper = gameObject.GetComponent<WebCamTextureToMatHelper>();
-        //webCamTexture = new WebCamTexture();
-        //renderer = GetComponent<Renderer>();
-        //texture = new Texture2D(640, 480, TextureFormat.RGBA32, false);
-        ////renderer.material.mainTexture = webCamTexture;
-        //webCamTexture.Play();
-        ////Debug.Log("Webcam:" + webCamTexture.height + " " + webCamTexture.width);
-        //rgbaMat = new Mat(webCamTexture.height, webCamTexture.width, CvType.CV_8UC4);
-        //texture = new Texture2D (webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
-        //renderer.material.mainTexture = texture;
-        webCamTextureToMatHelper.Initialize();
     }
 
     private int Modulo(int a, int b)
@@ -464,6 +471,7 @@ public class Tracking : MonoBehaviour
 
             // detect markers.
             Aruco.detectMarkers(rgbMat, dictionary, corners, ids, detectorParams, rejectedCorners, camMatrix, distCoeffs);
+            Debug.Log(ids.dump());
             //Debug.Log("Before: " + ids.dump());
             RemoveDuplicates(ref corners, ref ids);
             //Debug.Log("After: " + ids.dump());
@@ -493,38 +501,6 @@ public class Tracking : MonoBehaviour
 
     }
 
-    //TODO UNTESTED
-    /// <summary>
-    /// Takes the dump() from the mat and reconstructs the same mat
-    /// Useful for broken mats that output null when accessed with get()
-    /// </summary>
-    /// <param name="mat"></param>
-    /// <returns></returns>
-    private Mat RepairMat(Mat mat)
-    {
-        //TODO not working :/
-        Mat copy = new Mat();
-        String dump = mat.dump();
-        dump = dump.Replace("[", "");
-        dump = dump.Replace("]", "");
-        int[] matContents = Array.ConvertAll(dump.Split(','), s => int.Parse(s));
-        int arrayIndex = 0;
-        for (int i = 0; i < mat.width(); i++)
-        {
-            Debug.Log(i);
-            double[] point = new double[] { matContents[arrayIndex], matContents[arrayIndex + 1] };
-            copy.put(0, i, point);
-            arrayIndex += 2;
-        }
-        Debug.Log("UNTESTED " + copy.dump());
-
-        mat = copy;
-
-        return mat;
-    }
-
-
-
     private void RemoveDuplicates(ref List<Mat> corners, ref Mat ids)
     {
         if (ids.total() == 0 || ids.total() == 1)
@@ -540,7 +516,7 @@ public class Tracking : MonoBehaviour
 
             double largestArea = 0;
             int markerIndex = -1;
-            //Loop over a subgroup of the grouplist. The subgroup contains id's that are grouped
+            //Loop over a subgroup of the groupedgrouplist. The subgroup contains id's that are grouped
             for (int i = 0; i < arr.Length; i++)
             {
                 //If an id from that group was found in the image, we check if it it has the biggest area out of the found members of its group
@@ -685,7 +661,6 @@ public class Tracking : MonoBehaviour
     private void EstimatePoseCanonicalMarker(Mat rgbMat)
     {
         Aruco.estimatePoseSingleMarkers(corners, markerLength, camMatrix, distCoeffs, rvecs, tvecs);
-
         for (int i = 0; i < ids.total(); i++)
         {
             using (Mat rvec = new Mat(rvecs, new OpenCVForUnity.Rect(0, i, 1, 1)))
@@ -694,7 +669,7 @@ public class Tracking : MonoBehaviour
                 // In this example we are processing with RGB color image, so Axis-color correspondences are X: blue, Y: green, Z: red. (Usually X: red, Y: green, Z: blue)
                 Aruco.drawAxis(rgbMat, camMatrix, distCoeffs, rvec, tvec, markerLength * 0.5f);
 
-                UpdateARObjectTransform(rvec, tvec, i);
+                UpdateARObjectTransform(rvec, tvec, (int)ids.get(0,i)[0]);
             }
         }
     }
@@ -729,9 +704,11 @@ public class Tracking : MonoBehaviour
         // Apply Z axis inverted matrix.
         ARM = ARM * invertZM;
 
+        
+
         if (shouldMoveARCamera)
         {
-
+            //Not used right now
             ARM = arGameObjectList[index].transform.localToWorldMatrix * ARM.inverse; //TODO MAYBE NOT [0]
 
             ARUtils.SetTransformFromMatrix(arCamera.transform, ref ARM);
@@ -739,9 +716,34 @@ public class Tracking : MonoBehaviour
         }
         else
         {
+            Debug.Log("Index: " + index);
+            Vector3 newRot;
+            switch (index)
+            {
+                case 1:
+                    newRot = new Vector3(90, 0, 0);
+                    break;
+                case 2:
+                    newRot = new Vector3(90, 0, 90);
+                    break;
+                case 3:
+                    newRot = new Vector3(90, 0, 270);
+                    break;
+                case 4:
+                    newRot = new Vector3(180, 0, 0);
+                    break;
+                case 5:
+                    newRot = new Vector3(270, 0, 0);
+                    break;
+                default:
+                    newRot = new Vector3(0, 0, 0);
+                    break;
+            }
 
+            Quaternion rotation = Quaternion.Euler(newRot); //TODO REAL ANGLE
+            rotate90i = Matrix4x4.Rotate(rotation);
+            ARM = ARM * rotate90i;
             ARM = arCamera.transform.localToWorldMatrix * ARM;
-
             ARUtils.SetTransformFromMatrix(arGameObjectList[index].transform, ref ARM);//TODO MAYBE NOT [0]
         }
     }
@@ -845,5 +847,35 @@ public class Tracking : MonoBehaviour
         ids = copy;
 
         return;
+    }
+
+    //TODO UNTESTED
+    /// <summary>
+    /// Takes the dump() from the mat and reconstructs the same mat
+    /// Useful for broken mats that output null when accessed with get()
+    /// </summary>
+    /// <param name="mat"></param>
+    /// <returns></returns>
+    private Mat RepairMat(Mat mat)
+    {
+        //TODO not working :/
+        Mat copy = new Mat();
+        String dump = mat.dump();
+        dump = dump.Replace("[", "");
+        dump = dump.Replace("]", "");
+        int[] matContents = Array.ConvertAll(dump.Split(','), s => int.Parse(s));
+        int arrayIndex = 0;
+        for (int i = 0; i < mat.width(); i++)
+        {
+            Debug.Log(i);
+            double[] point = new double[] { matContents[arrayIndex], matContents[arrayIndex + 1] };
+            copy.put(0, i, point);
+            arrayIndex += 2;
+        }
+        Debug.Log("UNTESTED " + copy.dump());
+
+        mat = copy;
+
+        return mat;
     }
 }
