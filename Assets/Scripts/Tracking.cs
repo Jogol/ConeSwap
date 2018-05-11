@@ -66,7 +66,9 @@ public class Tracking : MonoBehaviour
     //TODO Correct groups
     //new int[]{2,3}, new int[]{4,5}
     int[][] groupList = new int[][] {
-        new int[]{0,1,2,3,4,5}
+        new int[]{0,1,2,3,4,5},
+        new int[]{10, 11, 12, 13, 14, 15},
+        new int[]{20, 21, 22, 23, 24, 25}
     };
 
     int[][] groupedGroupList;
@@ -223,18 +225,10 @@ public class Tracking : MonoBehaviour
         //In essence, there is one group per physical object (eg cardboard box)
         //If the provided number doesn't make sense, just make it all one big group
         setupGroups();
-        lastKeptID = new int[numberOfGroups];
-        lastKeptIDCurrentArea = new int[numberOfGroups];
+        PrintMat(groupedGroupList);
+        //lastKeptID = new int[numberOfGroups];
+        //lastKeptIDCurrentArea = new int[numberOfGroups];
         webCamTextureToMatHelper = gameObject.GetComponent<WebCamTextureToMatHelper>();
-        //webCamTexture = new WebCamTexture();
-        //renderer = GetComponent<Renderer>();
-        //texture = new Texture2D(640, 480, TextureFormat.RGBA32, false);
-        ////renderer.material.mainTexture = webCamTexture;
-        //webCamTexture.Play();
-        ////Debug.Log("Webcam:" + webCamTexture.height + " " + webCamTexture.width);
-        //rgbaMat = new Mat(webCamTexture.height, webCamTexture.width, CvType.CV_8UC4);
-        //texture = new Texture2D (webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
-        //renderer.material.mainTexture = texture;
         webCamTextureToMatHelper.Initialize();
     }
 
@@ -471,10 +465,9 @@ public class Tracking : MonoBehaviour
 
             // detect markers.
             Aruco.detectMarkers(rgbMat, dictionary, corners, ids, detectorParams, rejectedCorners, camMatrix, distCoeffs);
-            Debug.Log(ids.dump());
-            //Debug.Log("Before: " + ids.dump());
+            Debug.Log("Before: " + ids.dump());
             RemoveDuplicates(ref corners, ref ids);
-            //Debug.Log("After: " + ids.dump());
+            Debug.Log("After: " + ids.dump());
 
             // if at least one marker detected
             if (ids.total() > 0)
@@ -510,7 +503,7 @@ public class Tracking : MonoBehaviour
 
         foreach (int[] arr in groupedGroupList)
         {
-
+            Debug.Log("Arr: " + IntArrayToString(arr));
             if (arr.Length == 0 || arr.Length == 1)
                 continue;
 
@@ -706,7 +699,7 @@ public class Tracking : MonoBehaviour
 
         
 
-        if (shouldMoveARCamera)
+        if (false) //shouldMoveARCamera DONT USE
         {
             //Not used right now
             ARM = arGameObjectList[index].transform.localToWorldMatrix * ARM.inverse; //TODO MAYBE NOT [0]
@@ -718,6 +711,9 @@ public class Tracking : MonoBehaviour
         {
             Debug.Log("Index: " + index);
             Vector3 newRot;
+            //Debug.Log("Before mod: " + index);
+            index = Modulo(index, 10);
+            //Debug.Log("After mod: " + index);
             switch (index)
             {
                 case 1:
@@ -763,6 +759,20 @@ public class Tracking : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    void PrintMat(int[][] mat)
+    {
+        Debug.Log("Mat: ");
+        for (int i = 0; i < mat.Length; i++)
+        {
+            string line = "";
+            for (int j = 0; j < mat[0].Length; j++)
+            {
+                line = line + mat[i][j] + " ";
+            }
+            Debug.Log(line);
         }
     }
 
