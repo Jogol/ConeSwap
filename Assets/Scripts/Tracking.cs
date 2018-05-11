@@ -47,9 +47,8 @@ public class Tracking : MonoBehaviour
     /// </summary>
     public GameObject[] arGameObjectList;
 
-    public int objPerGroup;
-
-    GameObject[][] arGameObjectGroupedList;
+    public int numOfGroups = 3;
+    public int objPerGroup = 6;
 
     /// <summary>
     /// The AR camera.
@@ -234,24 +233,15 @@ public class Tracking : MonoBehaviour
 
     private void setupGroups()
     {
-        if (Modulo(arGameObjectList.Length, objPerGroup) != 0)
-            objPerGroup = arGameObjectList.Length;
-
-        int numOfGroups = arGameObjectList.Length / objPerGroup;
-
-        arGameObjectGroupedList = new GameObject[numOfGroups][];
         groupedGroupList = new int[numOfGroups][];
 
         for (int i = 0; i < numOfGroups; i++)
         {
             int[] idSubGroup = new int[objPerGroup];
-            GameObject[] objectSubGroup = new GameObject[objPerGroup];
             for (int j = 0; j < objPerGroup; j++)
             {
-                idSubGroup[j] = (i * objPerGroup) + j;
-                objectSubGroup[j] = arGameObjectList[(i * objPerGroup) + j];
+                idSubGroup[j] = (i * 10) + j;
             }
-            arGameObjectGroupedList[i] = objectSubGroup;
             groupedGroupList[i] = idSubGroup;
         }
     }
@@ -465,9 +455,9 @@ public class Tracking : MonoBehaviour
 
             // detect markers.
             Aruco.detectMarkers(rgbMat, dictionary, corners, ids, detectorParams, rejectedCorners, camMatrix, distCoeffs);
-            Debug.Log("Before: " + ids.dump());
+            //Debug.Log("Before: " + ids.dump());
             RemoveDuplicates(ref corners, ref ids);
-            Debug.Log("After: " + ids.dump());
+            //Debug.Log("After: " + ids.dump());
 
             // if at least one marker detected
             if (ids.total() > 0)
@@ -503,7 +493,7 @@ public class Tracking : MonoBehaviour
 
         foreach (int[] arr in groupedGroupList)
         {
-            Debug.Log("Arr: " + IntArrayToString(arr));
+            //Debug.Log("Arr: " + IntArrayToString(arr));
             if (arr.Length == 0 || arr.Length == 1)
                 continue;
 
@@ -661,21 +651,13 @@ public class Tracking : MonoBehaviour
             {
                 // In this example we are processing with RGB color image, so Axis-color correspondences are X: blue, Y: green, Z: red. (Usually X: red, Y: green, Z: blue)
                 Aruco.drawAxis(rgbMat, camMatrix, distCoeffs, rvec, tvec, markerLength * 0.5f);
-
-                UpdateARObjectTransform(rvec, tvec, (int)ids.get(0,i)[0]);
+                UpdateARObjectTransform(rvec, tvec, (int)ids.get(i,0)[0]);
             }
         }
     }
 
     private void UpdateARObjectTransform(Mat rvec, Mat tvec, int index)
     {
-        //If there are not enough arGameObjects, just return
-        if (index >= arGameObjectList.Length)
-        {
-            Debug.Log("Not enough arGameObjects, i: " + index);
-            return;
-        }
-
         // Position
         double[] tvecArr = new double[3];
         tvec.get(0, 0, tvecArr);
@@ -709,11 +691,23 @@ public class Tracking : MonoBehaviour
         }
         else
         {
-            Debug.Log("Index: " + index);
+            GameObject obj;
+            if (0 <= index && index < 6)
+            {
+                obj = arGameObjectList[0];
+            } else if (10 <= index && index < 16)
+            {
+                obj = arGameObjectList[1];
+            } else if (20 <= index && index < 26)
+            {
+                obj = arGameObjectList[2];
+            } else
+            {
+                obj = new GameObject();
+                Debug.LogException(new Exception("Index fucky!"));
+            }
             Vector3 newRot;
-            //Debug.Log("Before mod: " + index);
             index = Modulo(index, 10);
-            //Debug.Log("After mod: " + index);
             switch (index)
             {
                 case 1:
@@ -740,7 +734,7 @@ public class Tracking : MonoBehaviour
             rotate90i = Matrix4x4.Rotate(rotation);
             ARM = ARM * rotate90i;
             ARM = arCamera.transform.localToWorldMatrix * ARM;
-            ARUtils.SetTransformFromMatrix(arGameObjectList[index].transform, ref ARM);//TODO MAYBE NOT [0]
+            ARUtils.SetTransformFromMatrix(obj.transform, ref ARM);//TODO MAYBE NOT [0]
         }
     }
 
