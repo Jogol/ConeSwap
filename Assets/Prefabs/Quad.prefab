@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1861093967533184}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -162,10 +162,12 @@ MonoBehaviour:
   showRejectedCorners: 0
   applyEstimationPose: 1
   refineMarkerDetection: 1
-  markerLength: 0.1
-  arGameObject: {fileID: 0}
+  markerLength: 0.15
   arGameObjectList:
   - {fileID: 0}
-  objPerGroup: 0
+  - {fileID: 0}
+  - {fileID: 0}
+  numOfGroups: 3
+  objPerGroup: 6
   arCamera: {fileID: 0}
   shouldMoveARCamera: 0
