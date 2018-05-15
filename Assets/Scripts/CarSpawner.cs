@@ -12,8 +12,11 @@ public class CarSpawner : MonoBehaviour {
 
     public int minWaitTime = 4;
     public int maxWaitTime = 7;
+
+    bool spawnCars;
     // Use this for initialization
     void Start () {
+        spawnCars = true;
         StartCoroutine("Spawner");
     }
 	
@@ -22,9 +25,14 @@ public class CarSpawner : MonoBehaviour {
 		
 	}
 
+    public void SetSpawnCarsFalse()
+    {
+        spawnCars = false;
+    }
+
     IEnumerator Spawner()
     {
-        while (true)
+        while (spawnCars)
         {
             int randomNumber = Random.Range(minWaitTime, maxWaitTime);
             //bool boolean = (Random.value > 0.5f);

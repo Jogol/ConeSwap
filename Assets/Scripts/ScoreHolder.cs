@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreHolder : MonoBehaviour {
 
@@ -21,11 +22,16 @@ public class ScoreHolder : MonoBehaviour {
     public Material mat8;
     public Material mat9;
 
+    public int maxCarsSpawned;
+    public UnityEvent setSpawnCarsFalse;
+    
     int carsSpawned;
     int carsSaved;
 
-	// Use this for initialization
-	void Start () {
+    
+
+    // Use this for initialization
+    void Start () {
         carsSpawned = 0;
         carsSaved = 0;
 	}
@@ -34,6 +40,12 @@ public class ScoreHolder : MonoBehaviour {
 	void Update () {
         SetSavedQuad();
         SetSpawnedQuad();
+
+        if (carsSpawned >= maxCarsSpawned)
+        {
+            if (setSpawnCarsFalse != null)
+                setSpawnCarsFalse.Invoke();
+        }
 	}
 
     public void IncrementCarsSpawned()
