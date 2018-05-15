@@ -10,8 +10,8 @@ public class CarSpawner : MonoBehaviour {
 
     public UnityEvent incrementCarsSpawned;
 
-    public int minWaitTime = 4;
-    public int maxWaitTime = 7;
+    public float minWaitTime = 4;
+    public float maxWaitTime = 7;
 
     bool spawnCars;
     // Use this for initialization
@@ -34,13 +34,13 @@ public class CarSpawner : MonoBehaviour {
     {
         while (spawnCars)
         {
-            int randomNumber = Random.Range(minWaitTime, maxWaitTime);
+            float randomSleep = Random.Range(minWaitTime, maxWaitTime);
             //bool boolean = (Random.value > 0.5f);
             int rand = Random.Range(0, spawnPoints.Length);
             Instantiate(car, spawnPoints[rand].transform.position, spawnPoints[rand].transform.rotation);
             if (incrementCarsSpawned != null)
                 incrementCarsSpawned.Invoke();
-            yield return new WaitForSeconds(randomNumber);
+            yield return new WaitForSeconds(randomSleep);
         }
     }
 }
