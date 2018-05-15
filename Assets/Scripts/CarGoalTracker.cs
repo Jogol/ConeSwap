@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CarGoalTracker : MonoBehaviour {
 
-    int score = 0;
+    public UnityEvent incrementCarsSaved;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -19,13 +21,9 @@ public class CarGoalTracker : MonoBehaviour {
     {
         if (other.tag == "Car")
         {
-            score++;
+            if (incrementCarsSaved != null)
+                incrementCarsSaved.Invoke();
             Destroy(other.gameObject);
         }
-    }
-
-    public int GetScore ()
-    {
-        return score;
     }
 }

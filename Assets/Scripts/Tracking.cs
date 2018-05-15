@@ -55,11 +55,6 @@ public class Tracking : MonoBehaviour
     /// </summary>
     public Camera arCamera;
 
-    /// <summary>
-    /// Determines if request the AR camera moving.
-    /// </summary>
-    public bool shouldMoveARCamera = false;
-
     int numberOfGroups = 1;
 
     //TODO Correct groups
@@ -679,63 +674,55 @@ public class Tracking : MonoBehaviour
         // Apply Z axis inverted matrix.
         ARM = ARM * invertZM;
 
-        
 
-        if (false) //shouldMoveARCamera DONT USE
+
+        GameObject obj;
+        if (0 <= index && index < 6)
         {
-            //Not used right now
-            ARM = arGameObjectList[index].transform.localToWorldMatrix * ARM.inverse; //TODO MAYBE NOT [0]
-
-            ARUtils.SetTransformFromMatrix(arCamera.transform, ref ARM);
-
+            obj = arGameObjectList[0];
+        }
+        else if (10 <= index && index < 16)
+        {
+            obj = arGameObjectList[1];
+        }
+        else if (20 <= index && index < 26)
+        {
+            obj = arGameObjectList[2];
         }
         else
         {
-            GameObject obj;
-            if (0 <= index && index < 6)
-            {
-                obj = arGameObjectList[0];
-            } else if (10 <= index && index < 16)
-            {
-                obj = arGameObjectList[1];
-            } else if (20 <= index && index < 26)
-            {
-                obj = arGameObjectList[2];
-            } else
-            {
-                obj = new GameObject();
-                Debug.LogException(new Exception("Index fucky!"));
-            }
-            Vector3 newRot;
-            index = Modulo(index, 10);
-            switch (index)
-            {
-                case 1:
-                    newRot = new Vector3(90, 0, 0);
-                    break;
-                case 2:
-                    newRot = new Vector3(90, 0, 90);
-                    break;
-                case 3:
-                    newRot = new Vector3(90, 0, 270);
-                    break;
-                case 4:
-                    newRot = new Vector3(180, 0, 0);
-                    break;
-                case 5:
-                    newRot = new Vector3(270, 0, 0);
-                    break;
-                default:
-                    newRot = new Vector3(0, 0, 0);
-                    break;
-            }
-
-            Quaternion rotation = Quaternion.Euler(newRot); //TODO REAL ANGLE
-            rotate90i = Matrix4x4.Rotate(rotation);
-            ARM = ARM * rotate90i;
-            ARM = arCamera.transform.localToWorldMatrix * ARM;
-            ARUtils.SetTransformFromMatrix(obj.transform, ref ARM);//TODO MAYBE NOT [0]
+            obj = new GameObject();
+            Debug.LogException(new Exception("Weird index: " + index));
         }
+        Vector3 newRot;
+        index = Modulo(index, 10);
+        switch (index)
+        {
+            case 1:
+                newRot = new Vector3(90, 0, 0);
+                break;
+            case 2:
+                newRot = new Vector3(90, 0, 90);
+                break;
+            case 3:
+                newRot = new Vector3(90, 0, 270);
+                break;
+            case 4:
+                newRot = new Vector3(180, 0, 0);
+                break;
+            case 5:
+                newRot = new Vector3(270, 0, 0);
+                break;
+            default:
+                newRot = new Vector3(0, 0, 0);
+                break;
+        }
+
+        Quaternion rotation = Quaternion.Euler(newRot); //TODO REAL ANGLE
+        rotate90i = Matrix4x4.Rotate(rotation);
+        ARM = ARM * rotate90i;
+        ARM = arCamera.transform.localToWorldMatrix * ARM;
+        ARUtils.SetTransformFromMatrix(obj.transform, ref ARM);//TODO MAYBE NOT [0]
     }
 
     void LoopMatList(List<Mat> matList)

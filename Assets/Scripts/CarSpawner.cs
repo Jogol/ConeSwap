@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CarSpawner : MonoBehaviour {
 
     public GameObject car;
     public GameObject[] spawnPoints;
+
+    public UnityEvent incrementCarsSpawned;
 
     public int minWaitTime = 4;
     public int maxWaitTime = 7;
@@ -27,6 +30,8 @@ public class CarSpawner : MonoBehaviour {
             //bool boolean = (Random.value > 0.5f);
             int rand = Random.Range(0, spawnPoints.Length);
             Instantiate(car, spawnPoints[rand].transform.position, spawnPoints[rand].transform.rotation);
+            if (incrementCarsSpawned != null)
+                incrementCarsSpawned.Invoke();
             yield return new WaitForSeconds(randomNumber);
         }
     }
