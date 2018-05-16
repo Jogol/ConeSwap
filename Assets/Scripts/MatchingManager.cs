@@ -80,6 +80,8 @@ public class MatchingManager : MonoBehaviour {
         currentStarUp = starCube.GetComponent<Orientator>().GetNum();
         currentTriUp = triCube.GetComponent<Orientator>().GetNum();
 
+        //Debug.Log("Dot: " + currentDotUp);
+
         if (reroll)
         {
             reroll = false;

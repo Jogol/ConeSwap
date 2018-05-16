@@ -19,6 +19,7 @@ public class ContainsCube : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
+        Debug.Log("Enter");
         if (col.gameObject.tag == "DotCube")
         {
             containsDotCube = true;
