@@ -12,6 +12,9 @@ TagManager:
   - FxTemporaire
   - projectile
   - Car
+  - DotCube
+  - StarCube
+  - TriCube
   layers:
   - Default
   - TransparentFX

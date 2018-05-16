@@ -17,7 +17,7 @@ public class ContainsCube : MonoBehaviour {
 		
 	}
 
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "DotCube")
         {
@@ -34,7 +34,7 @@ public class ContainsCube : MonoBehaviour {
         }
     }
 
-    private void OnCollisionExit(Collision col)
+    private void OnTriggerExit(Collider col)
     {
         if (col.gameObject.tag == "DotCube")
         {
