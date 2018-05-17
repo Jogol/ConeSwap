@@ -67,11 +67,18 @@ public class MatchingManager : MonoBehaviour {
     int currentTriUp = 0;
 
     List<int> currentOrder;
+    List<float> clearTimes;
+    float lastClearTime;
+    float timerStartTime;
+
+    bool firstPatternCleared = false;
 
 	// Use this for initialization
 	void Start () {
         showList = new GameObject[] { showDot, showStar, showTri };
         slotList = new GameObject[] { dotSlot, starSlot, triSlot };
+        clearTimes = new List<float>();
+        lastClearTime = Time.time;
     }
 	
 	// Update is called once per frame
@@ -81,7 +88,7 @@ public class MatchingManager : MonoBehaviour {
         currentTriUp = triCube.GetComponent<Orientator>().GetNum();
         
 
-        if (reroll)
+        if (reroll) //TODO MAKE OWN FUNCTION
         {
             reroll = false;
             currentDotGoal = Random.Range(1, 6);
@@ -136,8 +143,23 @@ public class MatchingManager : MonoBehaviour {
 
         if (dotCorrect && starCorrect && triCorrect)
         {
+            if (score == 0)
+            {
+                firstPatternCleared = true;
+                lastClearTime = Time.time;
+            } else
+            {
+                float currentTime = Time.time;
+                float diff = currentTime - lastClearTime;
+                clearTimes.Add(diff);
+                WriteString(diff.ToString());
+                //Debug.Log(currentTime - lastClearTime);
+                lastClearTime = currentTime;
+                
+            }
             reroll = true;
             score++;
+            
             incrementScore.Invoke();
         }
     }
@@ -221,5 +243,15 @@ public class MatchingManager : MonoBehaviour {
             result += num + " ";
         }
         Debug.Log(result);
+    }
+
+    static void WriteString(string line)
+    {
+        string path = "Assets/Resources/test.txt";
+
+        //Write some text to the test.txt file
+        System.IO.StreamWriter writer = new System.IO.StreamWriter(path, true);
+        writer.WriteLine(line);
+        writer.Close();
     }
 }
