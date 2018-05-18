@@ -219,7 +219,7 @@ public class Tracking : MonoBehaviour
         //In essence, there is one group per physical object (eg cardboard box)
         //If the provided number doesn't make sense, just make it all one big group
         setupGroups();
-        PrintMat(groupedGroupList);
+        //PrintMat(groupedGroupList);
         //lastKeptID = new int[numberOfGroups];
         //lastKeptIDCurrentArea = new int[numberOfGroups];
         webCamTextureToMatHelper = gameObject.GetComponent<WebCamTextureToMatHelper>();

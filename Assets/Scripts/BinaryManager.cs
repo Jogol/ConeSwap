@@ -13,6 +13,10 @@ public class BinaryManager : MonoBehaviour {
     public GameObject box3;
     public GameObject box4;
 
+    public GameObject timeCounter;
+
+    public int playTime = 300; //5 minutes
+
     public string path = "";
 
     ClosestNum num1;
@@ -23,7 +27,9 @@ public class BinaryManager : MonoBehaviour {
     int score = 0;
     List<float> clearTimes;
     float lastClearTime;
-    float timerStartTime;
+    float timerStartTime = 0;
+    float timeLeft;
+    float timeSinceStartTime = 0;
 
     int targetNum;
     int displayFrames = 0;
@@ -49,6 +55,12 @@ public class BinaryManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (timerStartTime != 0)
+        {
+            timeSinceStartTime = Time.time - timerStartTime;
+        }
+        timeLeft = playTime - (timeSinceStartTime);
+        timeCounter.GetComponent<TimeCounter>().SetTimeLeft((int)timeLeft);
         if (displayFrames == 0)
         {
             result.text = "";
@@ -98,5 +110,20 @@ public class BinaryManager : MonoBehaviour {
         System.IO.StreamWriter writer = new System.IO.StreamWriter(path, true);
         writer.WriteLine(line);
         writer.Close();
+    }
+
+    private int Modulo(int a, int b)
+    {
+        return a - (int)((double)a / b) * b;
+    }
+
+    int SecondsLeft(int time)
+    {
+        return Modulo(time, 60);
+    }
+
+    int MinutesLeft(float time)
+    {
+        return (int) time / 60;
     }
 }
