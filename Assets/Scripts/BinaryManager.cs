@@ -13,13 +13,22 @@ public class BinaryManager : MonoBehaviour {
     public GameObject box3;
     public GameObject box4;
 
+    public string path = "";
+
     ClosestNum num1;
     ClosestNum num2;
     ClosestNum num3;
     ClosestNum num4;
 
+    int score = 0;
+    List<float> clearTimes;
+    float lastClearTime;
+    float timerStartTime;
+
     int targetNum;
     int displayFrames = 0;
+
+    
     // Use this for initialization
     void Start () {
         num1 = box1.GetComponent<ClosestNum>();
@@ -29,6 +38,13 @@ public class BinaryManager : MonoBehaviour {
 
         targetNum = GetRand();
         target.text = targetNum.ToString();
+
+        clearTimes = new List<float>();
+
+        if (path.Equals(""))
+        {
+            path = "Assets/Resources/Binary/" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
+        }
     }
 	
 	// Update is called once per frame
@@ -38,11 +54,29 @@ public class BinaryManager : MonoBehaviour {
             result.text = "";
         }
 
-        string numbers = "" + num1.GetNum() + num2.GetNum() + num3.GetNum() + num4.GetNum();
-        int b = Convert.ToInt32(numbers, 2);
-        current.text = b.ToString();
-        if (targetNum == b)
+        string stringNumber = "" + num1.GetNum() + num2.GetNum() + num3.GetNum() + num4.GetNum();
+        int number = Convert.ToInt32(stringNumber, 2);
+        current.text = number.ToString();
+        if (targetNum == number)
         {
+            if (score == 0)
+            {
+                //Start timing now
+                lastClearTime = Time.time;
+                timerStartTime = lastClearTime;
+            }
+            else
+            {
+                float currentTime = Time.time;
+                float diff = currentTime - lastClearTime;
+                clearTimes.Add(diff);
+                WriteString(diff.ToString());
+                //Debug.Log(currentTime - lastClearTime);
+                lastClearTime = currentTime;
+
+            }
+
+            score++;
             result.text = "Correct!";
             displayFrames = 200;
             targetNum = GetRand();
@@ -56,5 +90,13 @@ public class BinaryManager : MonoBehaviour {
     int GetRand()
     {
         return UnityEngine.Random.Range(0, 16);
+    }
+
+    void WriteString(string line)
+    {
+        //Write some text to the test.txt file
+        System.IO.StreamWriter writer = new System.IO.StreamWriter(path, true);
+        writer.WriteLine(line);
+        writer.Close();
     }
 }

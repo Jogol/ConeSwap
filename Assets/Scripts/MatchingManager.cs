@@ -3,6 +3,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Used for the rotation interaction scene
+/// </summary>
 public class MatchingManager : MonoBehaviour {
 
     public GameObject dotCube;
@@ -45,7 +48,7 @@ public class MatchingManager : MonoBehaviour {
 
     public GameObject[] showSpawn;
     public GameObject[] slotSpawn;
-    public int score = 0;
+    
 
     public UnityEvent incrementScore;
 
@@ -66,19 +69,24 @@ public class MatchingManager : MonoBehaviour {
     int currentStarUp = 0;
     int currentTriUp = 0;
 
+    int score = 0;
     List<int> currentOrder;
     List<float> clearTimes;
     float lastClearTime;
     float timerStartTime;
 
-    bool firstPatternCleared = false;
+    public string path = "";
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         showList = new GameObject[] { showDot, showStar, showTri };
         slotList = new GameObject[] { dotSlot, starSlot, triSlot };
         clearTimes = new List<float>();
-        lastClearTime = Time.time;
+
+        if (path.Equals(""))
+        {
+            path = "Assets/Resources/Rotation/" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
+        }
     }
 	
 	// Update is called once per frame
@@ -145,8 +153,9 @@ public class MatchingManager : MonoBehaviour {
         {
             if (score == 0)
             {
-                firstPatternCleared = true;
+                //Start timing now
                 lastClearTime = Time.time;
+                timerStartTime = lastClearTime;
             } else
             {
                 float currentTime = Time.time;
@@ -245,10 +254,8 @@ public class MatchingManager : MonoBehaviour {
         Debug.Log(result);
     }
 
-    static void WriteString(string line)
+    void WriteString(string line)
     {
-        string path = "Assets/Resources/test.txt";
-
         //Write some text to the test.txt file
         System.IO.StreamWriter writer = new System.IO.StreamWriter(path, true);
         writer.WriteLine(line);
