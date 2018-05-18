@@ -689,6 +689,10 @@ public class Tracking : MonoBehaviour
         {
             obj = arGameObjectList[2];
         }
+        else if (30 <= index && index < 36)
+        {
+            obj = arGameObjectList[3];
+        }
         else
         {
             obj = new GameObject();
