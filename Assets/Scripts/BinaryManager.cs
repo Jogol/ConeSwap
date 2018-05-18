@@ -12,13 +12,11 @@ public class BinaryManager : MonoBehaviour {
     public GameObject box2;
     public GameObject box3;
     public GameObject box4;
-    public GameObject box5;
 
     ClosestNum num1;
     ClosestNum num2;
     ClosestNum num3;
     ClosestNum num4;
-    ClosestNum num5;
 
     int targetNum;
     int displayFrames = 0;
@@ -28,7 +26,6 @@ public class BinaryManager : MonoBehaviour {
         num2 = box2.GetComponent<ClosestNum>();
         num3 = box3.GetComponent<ClosestNum>();
         num4 = box4.GetComponent<ClosestNum>();
-        num5 = box5.GetComponent<ClosestNum>();
 
         targetNum = GetRand();
         target.text = targetNum.ToString();
@@ -41,7 +38,7 @@ public class BinaryManager : MonoBehaviour {
             result.text = "";
         }
 
-        string numbers = "" + num1.GetNum() + num2.GetNum() + num3.GetNum() + num4.GetNum() + num5.GetNum();
+        string numbers = "" + num1.GetNum() + num2.GetNum() + num3.GetNum() + num4.GetNum();
         int b = Convert.ToInt32(numbers, 2);
         current.text = b.ToString();
         if (targetNum == b)
@@ -58,6 +55,6 @@ public class BinaryManager : MonoBehaviour {
 
     int GetRand()
     {
-        return UnityEngine.Random.Range(0, 32);
+        return UnityEngine.Random.Range(0, 16);
     }
 }

@@ -10,8 +10,8 @@ public class CarSpawner : MonoBehaviour {
 
     public UnityEvent incrementCarsSpawned;
 
-    public float minWaitTime = 4;
-    public float maxWaitTime = 7;
+    public float minWaitTime = 5;
+    public float maxWaitTime = 5;
 
     bool spawnCars;
     // Use this for initialization
@@ -22,7 +22,6 @@ public class CarSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
     public void SetSpawnCarsFalse()

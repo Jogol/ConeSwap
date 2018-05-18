@@ -22,7 +22,7 @@ public class ScoreHolder : MonoBehaviour {
     public Material mat8;
     public Material mat9;
 
-    public int maxCarsSpawned;
+    public int maxCarsSpawned = 40;
     public UnityEvent setSpawnCarsFalse;
     
     int carsSpawned;
