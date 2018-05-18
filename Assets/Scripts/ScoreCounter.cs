@@ -44,6 +44,7 @@ public class ScoreCounter : MonoBehaviour
 
     public void IncrementScore()
     {
+        Debug.Log("Inc");
         score++;
     }
 

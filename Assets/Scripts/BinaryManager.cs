@@ -45,7 +45,7 @@ public class BinaryManager : MonoBehaviour {
         num3 = box3.GetComponent<ClosestNum>();
         num4 = box4.GetComponent<ClosestNum>();
 
-        targetNum = GetRand();
+        targetNum = GetRand(targetNum);
         target.text = targetNum.ToString();
 
         clearTimes = new List<float>();
@@ -100,7 +100,7 @@ public class BinaryManager : MonoBehaviour {
             incrementScore.Invoke();
             result.text = "Correct!";
             displayFrames = 200;
-            targetNum = GetRand();
+            targetNum = GetRand(targetNum);
             target.text = targetNum.ToString();
         } else
         {
@@ -108,9 +108,14 @@ public class BinaryManager : MonoBehaviour {
         }
 	}
 
-    int GetRand()
+    int GetRand(int previousNumber)
     {
-        return UnityEngine.Random.Range(0, 16);
+        int newNum;
+        while((newNum = UnityEngine.Random.Range(0, 16)) == previousNumber)
+        {
+
+        }
+        return newNum;
     }
 
     void WriteString(string line)
