@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BinaryManager : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public class BinaryManager : MonoBehaviour {
     public int playTime = 300; //5 minutes
 
     public string path = "";
+
+    public UnityEvent incrementScore;
 
     ClosestNum num1;
     ClosestNum num2;
@@ -59,11 +62,16 @@ public class BinaryManager : MonoBehaviour {
         {
             timeSinceStartTime = Time.time - timerStartTime;
         }
-        timeLeft = playTime - (timeSinceStartTime);
+        timeLeft = Mathf.Max(playTime - (timeSinceStartTime), 0); //Stops at 0
         timeCounter.GetComponent<TimeCounter>().SetTimeLeft((int)timeLeft);
         if (displayFrames == 0)
         {
             result.text = "";
+        }
+
+        if (timeLeft < 1)
+        {
+            result.text = "Times up!";
         }
 
         string stringNumber = "" + num1.GetNum() + num2.GetNum() + num3.GetNum() + num4.GetNum();
@@ -89,6 +97,7 @@ public class BinaryManager : MonoBehaviour {
             }
 
             score++;
+            incrementScore.Invoke();
             result.text = "Correct!";
             displayFrames = 200;
             targetNum = GetRand();
@@ -106,6 +115,8 @@ public class BinaryManager : MonoBehaviour {
 
     void WriteString(string line)
     {
+        if (timeLeft == 0)
+            return;
         //Write some text to the test.txt file
         System.IO.StreamWriter writer = new System.IO.StreamWriter(path, true);
         writer.WriteLine(line);

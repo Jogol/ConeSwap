@@ -48,9 +48,14 @@ public class MatchingManager : MonoBehaviour {
 
     public GameObject[] showSpawn;
     public GameObject[] slotSpawn;
-    
+
+    public GameObject timeCounter;
+
 
     public UnityEvent incrementScore;
+
+    public int playTime;
+    public TextMesh result;
 
     GameObject[] showList;
     GameObject[] slotList;
@@ -73,7 +78,9 @@ public class MatchingManager : MonoBehaviour {
     List<int> currentOrder;
     List<float> clearTimes;
     float lastClearTime;
-    float timerStartTime;
+    float timerStartTime = 0;
+    float timeLeft;
+    float timeSinceStartTime = 0;
 
     public string path = "";
 
@@ -91,6 +98,17 @@ public class MatchingManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (timerStartTime != 0)
+        {
+            timeSinceStartTime = Time.time - timerStartTime;
+        }
+        timeLeft = Mathf.Max(playTime - (timeSinceStartTime), 0); //Stops at 0
+        timeCounter.GetComponent<TimeCounter>().SetTimeLeft((int)timeLeft);
+        if (timeLeft < 1)
+        {
+            result.text = "Times up!";
+        }
         currentDotUp = dotCube.GetComponent<Orientator>().GetNum();
         currentStarUp = starCube.GetComponent<Orientator>().GetNum();
         currentTriUp = triCube.GetComponent<Orientator>().GetNum();
@@ -256,6 +274,8 @@ public class MatchingManager : MonoBehaviour {
 
     void WriteString(string line)
     {
+        if (timeLeft == 0)
+            return;
         //Write some text to the test.txt file
         System.IO.StreamWriter writer = new System.IO.StreamWriter(path, true);
         writer.WriteLine(line);
