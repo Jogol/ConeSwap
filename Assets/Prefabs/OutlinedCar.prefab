@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 54086915957833956}
   - component: {fileID: 114674398876335332}
   - component: {fileID: 136520447181453418}
+  - component: {fileID: 114875792681521744}
   m_Layer: 0
   m_Name: OutlinedCar
   m_TagString: Car
@@ -179,7 +180,7 @@ GameObject:
   - component: {fileID: 23817338678632984}
   m_Layer: 0
   m_Name: OutlinedCar (1)
-  m_TagString: Car
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -770,6 +771,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrust: 0.62
+--- !u!114 &114875792681521744
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1541982646403668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd875cac86793e34490692cf68d23603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 1767534788539458, guid: 9442768fb7157e541a9b56d46cacc32b, type: 2}
 --- !u!136 &136520447181453418
 CapsuleCollider:
   m_ObjectHideFlags: 1

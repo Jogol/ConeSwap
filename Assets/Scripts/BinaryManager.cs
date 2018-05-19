@@ -45,7 +45,7 @@ public class BinaryManager : MonoBehaviour {
         num3 = box3.GetComponent<ClosestNum>();
         num4 = box4.GetComponent<ClosestNum>();
 
-        targetNum = GetRand(targetNum);
+        targetNum = 10;
         target.text = targetNum.ToString();
 
         clearTimes = new List<float>();

@@ -21,9 +21,6 @@ public class ScoreHolder : MonoBehaviour {
     public Material mat7;
     public Material mat8;
     public Material mat9;
-
-    public int maxCarsSpawned = 40;
-    public UnityEvent setSpawnCarsFalse;
     
     int carsSpawned;
     int carsSaved;
@@ -40,12 +37,6 @@ public class ScoreHolder : MonoBehaviour {
 	void Update () {
         SetSavedQuad();
         SetSpawnedQuad();
-
-        if (carsSpawned >= maxCarsSpawned)
-        {
-            if (setSpawnCarsFalse != null)
-                setSpawnCarsFalse.Invoke();
-        }
 	}
 
     public void IncrementCarsSpawned()

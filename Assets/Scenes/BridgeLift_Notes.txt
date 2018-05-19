@@ -1,5 +1,0 @@
-As it reuses the code from Bridger, there needs to be two spawn points.
-However, there is only one road here
-
-Left to implement:
-Tracking...
