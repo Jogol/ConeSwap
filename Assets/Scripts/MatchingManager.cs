@@ -90,10 +90,7 @@ public class MatchingManager : MonoBehaviour {
         slotList = new GameObject[] { dotSlot, starSlot, triSlot };
         clearTimes = new List<float>();
 
-        if (path.Equals(""))
-        {
-            path = "Assets/Resources/Rotation/" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
-        }
+        path = "Assets/Resources/Rotation/" + path + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
     }
 	
 	// Update is called once per frame

@@ -50,10 +50,7 @@ public class BinaryManager : MonoBehaviour {
 
         clearTimes = new List<float>();
 
-        if (path.Equals(""))
-        {
-            path = "Assets/Resources/Binary/" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
-        }
+        path = "Assets/Resources/Binary/" + path + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
     }
 	
 	// Update is called once per frame
